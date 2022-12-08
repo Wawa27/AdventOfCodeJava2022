@@ -23,4 +23,11 @@ public class CalorieCountingTest extends TestCase {
 
         assertEquals(24000, CalorieCounting.getMostCaloriesFromElves(filePath));
     }
+
+    public void testTop3Example() throws IOException {
+        String resourcePath = "caloriecounting/example.input";
+        String filePath = Objects.requireNonNull(CalorieCountingTest.class.getClassLoader().getResource(resourcePath)).getFile();
+
+        assertEquals(45000, CalorieCounting.getTop3MostCaloriesFromElves(filePath));
+    }
 }

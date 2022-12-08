@@ -17,9 +17,8 @@ public class CalorieCounting {
      * Entry point for the solution.
      * @param args Input file with calories, if no input file is provided, use the input file provided by the puzzle.
      * @throws IOException If the input file cannot be read.
-     * @throws NoElvesFoundException If no elves are found in the input file.
      */
-    public static void main(String[] args) throws IOException, NoElvesFoundException {
+    public static void main(String[] args) throws IOException {
         String filePath;
         if (args.length > 0) {
             filePath = args[0];
@@ -27,7 +26,7 @@ public class CalorieCounting {
             filePath = Objects.requireNonNull(CalorieCounting.class.getClassLoader().getResource("calorie_counting.input")).getFile();
         }
 
-        System.out.println("Elf with the most Calories: " + getMostCaloriesFromElves(filePath));
+        System.out.println("Elf with the most Calories: " + getTop3MostCaloriesFromElves(filePath));
     }
 
     /**
@@ -46,5 +45,23 @@ public class CalorieCounting {
                 .orElseThrow(NoElvesFoundException::new);
 
         return elfWithMostCalories.getCalories();
+    }
+
+    /**
+     * Check the input file for the top 3 elves with the most Calories,
+     * @param filePath The input file path.
+     * @throws IOException If the input file cannot be read.
+     * @return The calories of the top 3 elves.
+     */
+    public static int getTop3MostCaloriesFromElves(String filePath) throws IOException {
+        CalorieCountingInputHandler inputHandler = new CalorieCountingInputHandler();
+        InputUtils.readFile(inputHandler, filePath);
+
+        return inputHandler.getElves()
+                .stream()
+                .sorted(Comparator.comparingInt(Elf::getCalories).reversed())
+                .limit(3)
+                .mapToInt(Elf::getCalories)
+                .sum();
     }
 }
